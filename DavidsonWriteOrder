@@ -1,0 +1,73 @@
+//AUTHOR: Nickolas Davidson
+//COURSE: CPT 187
+//Purpose: this class will handle writing to the file like a file writer
+//CREATEDATE: 09/29/21
+
+package edu.cpt187.davidson.exercise6;
+
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class WriteOrder 
+{
+
+	//declare and initialize all class attributes
+	private boolean fileFoundFlag = false;
+	private String masterFileName = "";
+	private int recordCount = 0;
+
+	//constructor
+	//non-default constructor
+	public WriteOrder(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;
+	}//END of non-default constructor
+
+	//this behavior will write one record to the specified file
+	//and will overwrite the file
+	public void  setWriteOrder(int borrowedItemID, String borrowedItemName,
+			double borrowedItemPrice, int borrowedQuantity, double borrowedOrderCost)
+	{
+		try
+		{
+			fileFoundFlag = false;
+			//create one instance from the PrintWriter class using an instantiation statement
+			//and will overwrite the file
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, false));
+
+			//printf statement that writes one record to the file
+			filePW.printf("%n%d%s\tf%d%f", borrowedItemID, borrowedItemName, borrowedItemPrice,
+					borrowedQuantity, borrowedOrderCost);
+			//increment the LCV
+			recordCount++;
+
+			//close the Scanner/file
+			filePW.close();
+		}//END of try
+		catch (IOException ex)
+		{
+			fileFoundFlag = false;
+		}//END of Catch
+	}//END of setWriteOrder
+
+	//getters
+
+	//this behavior will return the value of fileFoundFlag
+	public boolean getFileFoundFlag()
+	{
+		return fileFoundFlag;
+	}//END of getFileFoundFlag
+
+	//this behavior will return the value of fileName
+	public String getFileName()
+	{
+		return masterFileName;
+	}//END of getFileName
+
+	//this behavior will return the value of the recordCount
+	public int getRecordCount()
+	{
+		return recordCount;
+	}//END of getRecordCount
+}//END of class WriteOrder
