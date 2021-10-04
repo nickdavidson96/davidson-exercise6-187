@@ -1,0 +1,156 @@
+//AUTHOR: Nickolas Davidson
+//COURSE: CPT 187
+//PURPOSE: this will act as a account manager would and keep track of user accounts
+//CREATEDATE: 09/29/21
+
+package edu.cpt187.davidson.exercise6;
+
+import java.io.PrintWriter;
+import java.io.FileInputStream;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class UserAccounts 
+{
+
+	//declare and initialize all class attributes
+	private final int NOT_FOUND = -1;
+	private final int RESET_VALUE = 0;
+	private final int MAXIMUM_RECORDS = 50;
+	private String[] userNames = new String [MAXIMUM_RECORDS];
+	private String[] passwords = new String [MAXIMUM_RECORDS];
+	private String masterFileName = "";
+	private int recordCount = 0;
+	private int searchedIndex = 0;
+
+	//constructor
+	//non-default constructor
+	public UserAccounts(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;
+	}//END of non-default constructor
+
+	//this behavior will set the arrays and read the file
+	public void setUserAccountArrays()
+	{
+		//try block
+		try
+		{
+			Scanner infile = new Scanner (new FileInputStream(masterFileName));
+			recordCount = 0;
+			while (infile.hasNext() == true && recordCount < MAXIMUM_RECORDS)
+			{
+				userNames[recordCount] = infile.next();
+				passwords[recordCount] = infile.next();
+				recordCount++;
+			}//END of while
+			//close Scanner/File
+			infile.close();
+		}//END of Try
+		//catch block
+		catch (IOException ex)
+		{
+			recordCount = NOT_FOUND;
+		}//END of catch
+	}//END of setUserAccountArrays
+
+	//this behavior will invoke the search behavior and assign results to searched index
+	public void setSearchedIndex (String borrowedUserName)
+	{
+		searchedIndex = getSeqSearch(borrowedUserName);
+	}//END of setSearchedIndex
+
+	//this overloaded method will assign a new value to searchedIndex
+	public void setSearchedIndex(String borrowedUserName, String borrowedPassword)
+	{
+		searchedIndex = getSeqSearch(borrowedUserName);
+		//selection structure to test searched index
+		if (searchedIndex >= RESET_VALUE && getPasswordMatch(borrowedPassword) == false)
+		{
+			searchedIndex = NOT_FOUND;
+		}//END of overloaded setSearchedIndex selection structure
+	}//END of overloaded setSearchedIndex
+
+	//this behavior will write one record to the specified file
+	//and will overwrite the file
+	public void  setWriteOneRecord(String borrowedUserName, String borrowedPassword)
+	{
+		//try block
+		try
+		{
+			//create one instance from the PrintWriter class using an instantiation statement
+			//and will overwrite the file
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, true));
+
+			//printf statement that writes one record to the file
+			filePW.printf("%n%s\t%s", borrowedUserName, borrowedPassword);
+			//increment the LCV
+			recordCount++;
+
+			//close the Scanner/file
+			filePW.close();
+		}//END of try
+		//catch block
+		catch (IOException ex)
+		{
+			//if try has problems set the error flag
+			recordCount = NOT_FOUND;
+		}//END of Catch
+	}//END of setWriteOneRecord
+
+	//getters
+
+	//this behavior will return the value of the search
+	public int getSeqSearch (String borrowedBorrowedUserName)
+	{
+		int localIndex = 0;
+		int localFound = NOT_FOUND;
+		//repetition structure for record count
+		while (localIndex < recordCount)
+		{
+			//selection structure for borrowedUserName
+			if (userNames[localIndex].equalsIgnoreCase(borrowedBorrowedUserName))
+			{
+				localFound = localIndex;
+				localIndex = recordCount;
+			}//END of if
+			//else
+			{
+				localIndex++;
+			}//END of else
+		}//END of repetition structure
+		return localFound;
+	}//END of getSeqSearch
+
+	//this behavior will return the value of passwordMatch
+	public boolean getPasswordMatch (String borrowedBorrowedPassword)
+	{
+		return passwords[searchedIndex].equals(borrowedBorrowedPassword);
+	}//END of getPasswordMatch
+
+	//this behavior will return the value of fileName
+	public String getFileName()
+	{
+		return masterFileName;
+	}//END of getFileName
+
+	//this behavior will return the value of maximumRecords
+	public int getMaximumRecords()
+	{
+		return MAXIMUM_RECORDS;
+	}//END of getMaximumRecords
+
+	//this behavior will return the value of the recordCount
+	public int getRecordCount()
+	{
+		return recordCount;
+	}//END of getRecordCount
+
+	//this behavior will return the value of searchedIndex
+	public int getSearchedIndex()
+	{
+		return searchedIndex;
+	}//END of getSearchedIndex
+
+}//END classUserAccounts
